@@ -14,8 +14,8 @@
         extend: {
           colors: {
             brand: {
-              dark: '#0f172a',
-              card: '#1e293b',
+              dark: '#080c18',
+              card: '#12182b',
               accent: '#f59e0b',
               danger: '#ef4444',
               success: '#10b981',
@@ -53,16 +53,29 @@
     }
 
     @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
 
     .animate-float {
       animation: float 2.2s ease-in-out infinite;
+    }
+
+    .raffle-complete-text {
+      font-size: 20px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 375px) {
+      .raffle-complete-text { font-size: 24px; }
+    }
+
+    @media (min-width: 520px) {
+      .raffle-complete-text { font-size: 30px; }
+    }
+
+    @media (min-width: 1024px) {
+      .raffle-complete-text { font-size: 36px; }
     }
 
     /* Custom Scrollbar */
@@ -108,7 +121,6 @@
 
         <!-- Controle Pill Button -->
         <button id="leader-toggle-btn" onclick="toggleLeaderPanel()" class="h-11 px-4 rounded-full bg-[#1c1236] hover:bg-[#26184a] border border-[#8b5cf6]/60 text-[#e9d5ff] text-xs font-black tracking-wider uppercase transition flex items-center gap-2 shadow-md shadow-purple-950/40 active:scale-95">
-          <!-- Sliders Icon -->
           <svg class="w-4 h-4 stroke-[#d8b4fe] fill-none stroke-[2.2]" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <line x1="4" y1="21" x2="4" y2="14"></line>
             <line x1="4" y1="10" x2="4" y2="3"></line>
@@ -120,7 +132,6 @@
             <line x1="9" y1="8" x2="15" y2="8"></line>
             <line x1="17" y1="16" x2="23" y2="16"></line>
           </svg>
-          <!-- Gear Icon -->
           <svg class="w-4 h-4 fill-[#d8b4fe]" viewBox="0 0 24 24">
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
           </svg>
@@ -218,7 +229,14 @@
         <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow space-y-1.5">
           <h3 class="text-base font-bold text-purple-400 flex items-center gap-2">🗳️ VOTAÇÃO</h3>
           <p class="text-slate-300 text-xs leading-relaxed">
-            O grupo escolhe uma dupla suspeita. O líder registra a dupla mais votada no aplicativo e verifica o resultado.
+            O grupo escolhe a dupla que considera suspeita. O líder registra no aplicativo a dupla que recebeu mais votos.
+          </p>
+        </div>
+
+        <div class="bg-red-950/40 border border-red-500/40 rounded-2xl p-4 shadow space-y-1.5">
+          <h3 class="text-base font-bold text-red-400 flex items-center gap-2">🚪 ELIMINAÇÃO</h3>
+          <p class="text-slate-200 text-xs leading-relaxed">
+            A dupla eliminada conta ao grupo quem era o impostor e revela as duas palavras que foram sorteadas.
           </p>
         </div>
       </div>
@@ -318,28 +336,28 @@
     <!-- SCREEN: SORTEANDO O IMPOSTOR -->
     <div id="screen-raffling" class="screen hidden space-y-6 animate-fade-in text-center my-auto py-4">
       <div class="space-y-3">
-        <div class="inline-block bg-[#1e1138] border border-[#a855f7]/50 text-[#d8b4fe] font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-widest shadow-md">
+        <div id="raffle-badge" class="inline-block bg-[#1a1233] border border-[#a855f7]/60 text-[#d8b4fe] font-black text-xs px-5 py-1.5 rounded-full uppercase tracking-widest shadow-md">
           SORTEIO SECRETO
         </div>
-        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase">
+        <h1 id="raffle-title" class="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase">
           SORTEANDO O IMPOSTOR...
         </h1>
-        <p class="text-slate-400 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
+        <p id="raffle-subtitle" class="text-slate-400 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
           O sistema está escolhendo quem receberá a palavra secreta.
         </p>
       </div>
 
-      <div class="bg-[#0b0e1b] border-2 border-[#7c3aed] rounded-3xl p-8 shadow-[0_0_30px_rgba(124,58,237,0.35)] flex flex-col items-center justify-center min-h-[180px] transition-all">
-        <div id="raffle-pair-display" class="text-3xl sm:text-4xl font-black text-[#c084fc] tracking-tight transition-transform scale-100">
+      <div class="bg-[#0b0d1a] border-2 border-[#7c3aed]/80 rounded-3xl p-8 shadow-[0_0_35px_rgba(124,58,237,0.35)] flex flex-col items-center justify-center min-h-[190px] transition-all">
+        <div id="raffle-pair-display" class="text-3xl sm:text-4xl font-black text-[#c084fc] tracking-tight transition-all">
           Dupla 1
         </div>
-        <p class="text-[11px] font-extrabold text-[#64748b] tracking-widest uppercase mt-4">
+        <p id="raffle-subtext" class="text-[11px] font-extrabold text-[#64748b] tracking-widest uppercase mt-4">
           SORTEANDO ENTRE DUPLAS ATIVAS
         </p>
       </div>
 
       <div id="raffle-action-container" class="hidden pt-2">
-        <button onclick="proceedToDistribution()" class="w-full py-4 bg-[#9333ea] hover:bg-[#7e22ce] active:scale-95 text-white font-black text-base sm:text-lg rounded-2xl shadow-xl shadow-purple-950/50 transition flex items-center justify-center gap-2 uppercase tracking-wide">
+        <button onclick="proceedToDistribution()" class="w-full py-4 bg-[#9333ea] hover:bg-[#7e22ce] active:scale-95 text-white font-black text-base sm:text-lg rounded-2xl shadow-xl shadow-purple-950/60 transition flex items-center justify-center gap-2 uppercase tracking-wide">
           PROSSEGUIR PARA DISTRIBUIÇÃO ➔
         </button>
       </div>
@@ -435,47 +453,62 @@
         <p class="text-slate-300 text-xs">Quem a maioria escolheu como suspeito?</p>
       </div>
 
-      <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl space-y-3">
-        <label class="text-xs font-bold text-slate-300 block uppercase tracking-wider">Selecione a Dupla Votada:</label>
-        <select id="vote-pair-select" class="w-full bg-slate-900 border border-slate-700 text-white font-bold p-3.5 rounded-xl text-sm focus:ring-2 focus:ring-amber-400">
-          <!-- Active pairs options -->
+      <div class="space-y-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Selecione a dupla mais votada:</label>
+        <select id="vote-pair-select" class="w-full bg-slate-800 border border-slate-700 text-white font-bold p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
         </select>
-        <p class="text-[11px] text-slate-400 italic">
-          ⚠ O líder deve clicar abaixo para verificar se a dupla selecionada é ou não o Impostor.
-        </p>
       </div>
 
-      <div class="space-y-2">
-        <button onclick="processVoteResult()" class="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black text-base rounded-2xl shadow-lg transition">
-          🔍 CONFERIR SUSPEITO COM O LÍDER
+      <div class="space-y-2 pt-2">
+        <button onclick="processVoteResult()" class="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black text-base rounded-2xl shadow-lg transition uppercase tracking-wide">
+          🚨 CONFIRMAR ELIMINAÇÃO
         </button>
-        <button onclick="showScreen('screen-clues')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition">
-          ← Voltar para Pistas
+        <button onclick="showScreen('screen-clues')" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs rounded-xl transition">
+          Voltar para Pistas
         </button>
       </div>
     </div>
 
-    <!-- SCREEN: DUEL -->
+    <!-- SCREEN: DUELO FINAL -->
     <div id="screen-duel" class="screen hidden space-y-5 animate-fade-in">
-      <div class="bg-purple-950/80 border-2 border-purple-500 rounded-3xl p-5 text-center space-y-2">
-        <span class="text-4xl">⚔️</span>
-        <h2 class="text-2xl font-black text-purple-300 tracking-tight">DUELO FINAL!</h2>
-        <p class="text-amber-300 font-bold text-xs uppercase tracking-wider">⚠️ NÃO EXISTE IMPOSTOR NESTA ETAPA</p>
-        <p class="text-slate-300 text-xs">Restam apenas 2 duplas! Cada uma possui uma palavra distinta.</p>
-      </div>
-
-      <div class="bg-slate-800/90 border border-slate-700 p-4 rounded-2xl space-y-3">
-        <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider">Como funciona o Duelo:</h3>
-        <p class="text-slate-300 text-xs leading-relaxed">
-          1. Cada dupla dá uma pista sobre sua palavra.<br/>
-          2. Em seguida, tentam adivinhar a palavra do adversário.<br/>
-          3. O líder marca quem pontuou ou se houve empate.
+      <!-- MAIN DUEL CARD -->
+      <div class="bg-[#180b2d] border-2 border-[#8b5cf6] rounded-3xl p-6 text-center space-y-3 shadow-[0_0_35px_rgba(139,92,246,0.35)]">
+        <div class="text-4xl">⚔️</div>
+        <h1 class="text-3xl font-black text-white tracking-tight uppercase">DUELO FINAL!</h1>
+        <div class="inline-flex items-center gap-1.5 text-amber-400 font-black text-xs uppercase tracking-wider bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+          <span>⚠️</span> <span>NÃO EXISTE IMPOSTOR NESTA ETAPA</span>
+        </div>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed pt-1">
+          Restam apenas 2 duplas! Cada uma possui uma palavra distinta.
         </p>
       </div>
 
-      <div class="space-y-2">
-        <button onclick="openLeaderDuelPanel()" class="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white font-black text-base rounded-2xl shadow-lg transition">
-          ⚙️ REGISTRAR VENCEDOR / PONTOS
+      <!-- HOW DUEL WORKS CARD -->
+      <div class="bg-[#101726] border border-[#21304a] rounded-2xl p-5 space-y-3 shadow-md">
+        <h3 class="text-xs font-black text-sky-400 uppercase tracking-wider">
+          COMO FUNCIONA O DUELO:
+        </h3>
+        <ol class="space-y-2.5 text-xs text-slate-200 leading-relaxed font-medium">
+          <li class="flex items-start gap-2.5">
+            <span class="font-extrabold text-slate-400">1.</span>
+            <span>Cada dupla dá uma pista sobre sua palavra.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="font-extrabold text-slate-400">2.</span>
+            <span>Em seguida, tentam adivinhar a palavra do adversário.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="font-extrabold text-slate-400">3.</span>
+            <span>O líder marca quem pontuou ou se houve empate.</span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- REGISTER WINNER BUTTON -->
+      <div class="pt-2">
+        <button onclick="openDuelResultModal()" class="w-full py-4 bg-[#8b5cf6] hover:bg-[#7c3aed] active:scale-95 text-white font-black text-base rounded-2xl shadow-xl shadow-purple-950/60 transition flex items-center justify-center gap-2 uppercase tracking-wide">
+          <span>⚙️</span>
+          <span>REGISTRAR VENCEDOR / PONTOS</span>
         </button>
       </div>
     </div>
@@ -517,7 +550,6 @@
 
       <!-- RIGHT: ACTION BUTTONS (DESFAZER & PAINEL LÍDER) -->
       <div class="flex items-center gap-2">
-        <!-- DESFAZER BUTTON -->
         <button onclick="undoLastAction()" class="h-10 px-3.5 rounded-xl bg-[#1c2438] hover:bg-[#25304a] border border-[#2b3652] text-slate-200 text-xs font-black tracking-wider uppercase transition flex items-center gap-1.5 active:scale-95 shadow-sm">
           <svg class="w-3.5 h-3.5 fill-slate-200 stroke-slate-200" viewBox="0 0 24 24">
             <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
@@ -525,7 +557,6 @@
           <span>DESFAZER</span>
         </button>
 
-        <!-- PAINEL LÍDER BUTTON -->
         <button onclick="toggleLeaderPanel()" class="h-10 px-3.5 rounded-xl bg-gradient-to-r from-[#9333ea] to-[#3b82f6] hover:from-[#a855f7] hover:to-[#60a5fa] text-white text-xs font-black tracking-wider uppercase transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-purple-950/50">
           <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -538,42 +569,184 @@
 
   <!-- MODAL: LEADER CONTROL PANEL -->
   <div id="leader-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 animate-fade-in">
-    <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto text-slate-200">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+    <div class="bg-[#0b0e1b] border border-[#1e2740] rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto text-slate-200 shadow-2xl">
+      <!-- HEADER -->
+      <div class="flex justify-between items-center border-b border-[#1a233a] pb-3">
         <div class="flex items-center gap-2">
           <span class="text-xl">⚙️</span>
-          <h2 class="text-lg font-black text-amber-400 uppercase tracking-tight">PAINEL EXCLUSIVO DO LÍDER</h2>
+          <h2 class="text-base font-black text-amber-400 uppercase tracking-wide">PAINEL EXCLUSIVO DO LÍDER</h2>
         </div>
         <button onclick="toggleLeaderPanel()" class="text-slate-400 hover:text-white text-xl font-bold p-1">✕</button>
       </div>
 
-      <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 space-y-2 text-xs">
-        <p class="font-bold text-amber-300">🕵️ INFORMAÇÕES SECRETAS DA RODADA:</p>
-        <div id="leader-secret-info" class="space-y-1 text-slate-300">
-          <!-- Rendered dynamically -->
+      <!-- ROUND INFO & WORDS -->
+      <div class="bg-[#0f1526] border border-[#1e2942] p-3.5 rounded-2xl space-y-2 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-slate-400">INFO DA RODADA:</span>
+          <span id="leader-round-badge" class="bg-purple-900/60 text-purple-300 font-black px-2.5 py-0.5 rounded-full border border-purple-500/30">Rodada 1</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <div class="bg-[#090d18] p-2 rounded-xl border border-[#1a233a]">
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Palavra Comum</span>
+            <span id="leader-normal-word" class="font-bold text-emerald-400 text-xs truncate block">---</span>
+          </div>
+          <div class="bg-[#090d18] p-2 rounded-xl border border-[#1a233a]">
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Palavra Impostor</span>
+            <span id="leader-impostor-word" class="font-bold text-red-400 text-xs truncate block">---</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center bg-[#090d18] p-2 rounded-xl border border-[#1a233a] mt-1">
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Dupla Impostora</span>
+            <span id="leader-impostor-name" class="text-sm font-black text-[#c084fc] truncate">••••••••</span>
+          </div>
+          <button id="toggle-reveal-impostor-btn" onclick="toggleImpostorReveal()" class="bg-[#1e2740] hover:bg-[#283454] text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+            <span>👁</span><span>Revelar</span>
+          </button>
         </div>
       </div>
 
+      <!-- QUICK ACTIONS -->
+      <div class="space-y-1.5">
+        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider">Ações Rápidas do Líder:</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="leaderQuickVote()" class="p-2.5 bg-[#1e1738] hover:bg-[#2a1f4d] border border-purple-500/40 text-purple-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+            <span>🗳️</span> Ir p/ Votação
+          </button>
+          <button onclick="restartCurrentRoundPrompt()" class="p-2.5 bg-[#1e2238] hover:bg-[#2a2f4d] border border-blue-500/40 text-blue-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+            <span>🔄</span> Reiniciar Rodada
+          </button>
+        </div>
+      </div>
+
+      <!-- POINTS MANAGEMENT -->
       <div class="space-y-2">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ajustar Pontuação das Duplas:</h3>
-        <div id="leader-pairs-management" class="space-y-2 max-h-40 overflow-y-auto pr-1">
-          <!-- Rendered dynamically -->
+        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider">Ajuste Manual de Pontos:</span>
+        <div id="leader-pairs-management" class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+          <!-- Rendered via JS -->
         </div>
       </div>
 
-      <div class="pt-2 space-y-2">
-        <button onclick="cancelRoundAndRestart()" class="w-full py-3 bg-red-600/90 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5">
-          <span>🚫</span> CANCELAR RODADA E SORTEAR NOVA
+      <!-- HISTORIES -->
+      <div class="space-y-2 pt-1">
+        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider">Histórico de Eliminações:</span>
+        <div id="leader-elimination-history"></div>
+
+        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider block pt-1">Histórico de Pontuação:</span>
+        <div id="leader-score-history"></div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div class="pt-2 border-t border-[#1a233a] flex gap-2">
+        <button onclick="startNextRoundPrompt()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl transition">
+          🚀 Nova Rodada
         </button>
-        <button onclick="toggleLeaderPanel()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition">
-          FECHAR PAINEL
+        <button onclick="confirmEndGameAndReset()" class="flex-1 py-2.5 bg-red-950/80 hover:bg-red-900 border border-red-500/40 text-red-300 font-black text-xs rounded-xl transition">
+          🚨 Encerrar Partida
         </button>
       </div>
     </div>
   </div>
 
+  <!-- MODAL: DUEL RESULT SELECTION -->
+  <div id="duel-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 animate-fade-in">
+    <div class="bg-[#12182b] border border-[#232b45] rounded-3xl w-full max-w-sm p-6 text-center space-y-4 shadow-2xl">
+      <div class="text-4xl">⚔️</div>
+      <h3 class="text-lg font-black text-white">Resultado do Duelo Final</h3>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Selecione quem acertou a palavra do oponente para atribuir a pontuação e avançar para a próxima rodada:
+      </p>
+
+      <div id="duel-options-container" class="space-y-2 pt-1">
+        <!-- Dynamic duel options generated via JS -->
+      </div>
+
+      <button onclick="closeDuelModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs rounded-xl transition">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- CUSTOM NOTIFICATION MODAL -->
+  <div id="custom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 animate-fade-in">
+    <div class="bg-[#12182b] border border-[#232b45] rounded-3xl w-full max-w-sm p-6 text-center space-y-4 shadow-2xl">
+      <div id="custom-modal-icon" class="text-4xl">ℹ️</div>
+      <h3 id="custom-modal-title" class="text-lg font-black text-white">Aviso</h3>
+      <p id="custom-modal-body" class="text-xs text-slate-300 leading-relaxed whitespace-pre-line"></p>
+      <button id="custom-modal-btn" onclick="closeNotificationModal()" class="w-full py-3 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-black text-sm rounded-xl transition uppercase tracking-wide">
+        ENTENDI
+      </button>
+    </div>
+  </div>
+
   <script>
-    /* Safe localStorage helpers */
+    /* AUDIO & STORAGE HELPERS */
+    let audioCtx = null;
+    function playBubbleSound() {
+      if (!window.state || !window.state.soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {
+        // Audio fallback
+      }
+    }
+
+    function playAttentionSound() {
+      if (!window.state || !window.state.soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        
+        // Note 1 (Bright attention chime)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(523.25, now); // C5
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.25);
+
+        // Note 2 (Upbeat higher pitch)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(783.99, now + 0.12); // G5
+        gain2.gain.setValueAtTime(0.35, now + 0.12);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.12);
+        osc2.stop(now + 0.5);
+      } catch (e) {
+        // Audio fallback
+      }
+    }
+
+    /* safe localStorage helpers */
     function getStorage(key) {
       try {
         return localStorage.getItem(key);
@@ -586,9 +759,45 @@
       try {
         localStorage.setItem(key, value);
       } catch (e) {
-        // Restricted in sandboxed iFrame
+        // Sandboxed fallback
       }
     }
+
+    /* Custom Notification System */
+    function notify(message, title = "Aviso", icon = "ℹ️", btnText = "ENTENDI", onConfirm = null) {
+      const modal = document.getElementById('custom-modal');
+      const modalTitle = document.getElementById('custom-modal-title');
+      const modalBody = document.getElementById('custom-modal-body');
+      const modalIcon = document.getElementById('custom-modal-icon');
+      const modalBtn = document.getElementById('custom-modal-btn');
+      
+      if (modal && modalTitle && modalBody) {
+        modalTitle.textContent = title;
+        modalBody.textContent = message;
+        if (modalIcon) modalIcon.textContent = icon;
+        if (modalBtn) {
+          modalBtn.textContent = btnText;
+          modalBtn.onclick = function() {
+            closeNotificationModal();
+            if (typeof onConfirm === 'function') {
+              onConfirm();
+            }
+          };
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+    window.notify = notify;
+
+    function closeNotificationModal() {
+      const modal = document.getElementById('custom-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+    window.closeNotificationModal = closeNotificationModal;
 
     /* WORD DATABASE & CATEGORIES */
     const WORD_DATABASE = {
@@ -641,7 +850,7 @@
       ]
     };
 
-    /* GLOBAL STATE MANAGER */
+    /* GLOBAL STATE INITIALIZATION */
     window.state = {
       soundEnabled: true,
       pairs: [
@@ -656,507 +865,496 @@
       normalWord: "",
       impostorWord: "",
       currentRevealIndex: 0,
-      isDuelMode: false,
-      historyStack: []
+      historyStack: [],
+      eliminationHistory: [],
+      scoreHistory: [],
+      isImpostorRevealed: false,
+      isDuel: false
     };
 
+    // Restore saved pairs if available
     const savedPairs = getStorage('impostor_pairs');
     if (savedPairs) {
-      try { window.state.pairs = JSON.parse(savedPairs); } catch(e){}
+      try {
+        const parsed = JSON.parse(savedPairs);
+        if (Array.isArray(parsed) && parsed.length >= 1) {
+          window.state.pairs = parsed;
+        }
+      } catch (e) {}
     }
 
+    /* SCREEN ROUTER */
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
       const target = document.getElementById(screenId);
       if (target) {
         target.classList.remove('hidden');
-        window.scrollTo(0,0);
       }
       updateBottomBarInfo();
     }
     window.showScreen = showScreen;
 
-    function toggleLeaderPanel() {
-      const modal = document.getElementById('leader-modal');
-      if (!modal) return;
-      if (modal.classList.contains('hidden')) {
-        renderLeaderInfo();
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      } else {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
-    }
-    window.toggleLeaderPanel = toggleLeaderPanel;
-
+    /* SOUND TOGGLE */
     function toggleSound() {
       window.state.soundEnabled = !window.state.soundEnabled;
-      const onIcon = document.getElementById('sound-icon-on');
-      const offIcon = document.getElementById('sound-icon-off');
-      if (onIcon && offIcon) {
-        onIcon.classList.toggle('hidden', !window.state.soundEnabled);
-        offIcon.classList.toggle('hidden', window.state.soundEnabled);
+      const soundOn = document.getElementById('sound-icon-on');
+      const soundOff = document.getElementById('sound-icon-off');
+      if (soundOn && soundOff) {
+        if (window.state.soundEnabled) {
+          soundOn.classList.remove('hidden');
+          soundOff.classList.add('hidden');
+          playBubbleSound();
+        } else {
+          soundOn.classList.add('hidden');
+          soundOff.classList.remove('hidden');
+        }
       }
     }
     window.toggleSound = toggleSound;
 
-    function saveStateForUndo() {
-      window.state.historyStack.push(JSON.stringify({
-        pairs: window.state.pairs,
-        activePairs: window.state.activePairs,
-        currentRound: window.state.currentRound
-      }));
-    }
-
-    function undoLastAction() {
-      if (window.state.historyStack && window.state.historyStack.length > 0) {
-        const previous = JSON.parse(window.state.historyStack.pop());
-        window.state.pairs = previous.pairs;
-        window.state.activePairs = previous.activePairs;
-        window.state.currentRound = previous.currentRound;
-        updateBottomBarInfo();
-        renderActivePairsClues();
-        renderScoreboard();
-        playBubbleSound();
-        alert("↺ Última ação desfeita!");
-      } else {
-        alert("Nenhuma ação anterior para desfazer.");
+    /* LEADER MODAL TOGGLE */
+    function toggleLeaderPanel() {
+      playBubbleSound();
+      const modal = document.getElementById('leader-modal');
+      if (modal) {
+        if (modal.classList.contains('hidden')) {
+          renderLeaderInfo();
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        } else {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
       }
     }
-    window.undoLastAction = undoLastAction;
+    window.toggleLeaderPanel = toggleLeaderPanel;
 
-    function updateBottomBarInfo() {
-      const roundEl = document.getElementById('bottom-round-label');
-      const pairsEl = document.getElementById('bottom-active-pairs-label');
-
-      const roundNum = window.state.currentRound || 1;
-      const activeCount = (window.state.activePairs && window.state.activePairs.length > 0)
-        ? window.state.activePairs.filter(p => p.active).length
-        : window.state.pairs.length;
-
-      if (roundEl) roundEl.textContent = `Rodada ${roundNum}`;
-      if (pairsEl) pairsEl.textContent = `${activeCount} Dupla${activeCount === 1 ? '' : 's'} Ativa${activeCount === 1 ? '' : 's'}`;
-    }
-    window.updateBottomBarInfo = updateBottomBarInfo;
-
-    /* Organic Bubble Pop Sound Synthesizer */
-    function playBubbleSound() {
-      if (!window.state.soundEnabled) return;
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        if (!window.audioCtx) {
-          window.audioCtx = new AudioCtx();
-        }
-        if (window.audioCtx.state === 'suspended') {
-          window.audioCtx.resume();
-        }
-
-        const ctx = window.audioCtx;
-        const now = ctx.currentTime;
-
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'sine';
-        const baseFreq = 300 + Math.random() * 120;
-        const targetFreq = 950 + Math.random() * 180;
-
-        osc.frequency.setValueAtTime(baseFreq, now);
-        osc.frequency.exponentialRampToValueAtTime(targetFreq, now + 0.05);
-
-        gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.4, now + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(now);
-        osc.stop(now + 0.06);
-      } catch (e) {
-        console.error("Audio playback error:", e);
-      }
-    }
-    window.playBubbleSound = playBubbleSound;
-
-    function playSuccessChime() {
-      if (!window.state.soundEnabled) return;
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        if (!window.audioCtx) {
-          window.audioCtx = new AudioCtx();
-        }
-        if (window.audioCtx.state === 'suspended') {
-          window.audioCtx.resume();
-        }
-
-        const ctx = window.audioCtx;
-        const now = ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-
-          const start = now + idx * 0.07;
-          gain.gain.setValueAtTime(0.01, start);
-          gain.gain.linearRampToValueAtTime(0.25, start + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start(start);
-          osc.stop(start + 0.35);
-        });
-      } catch (e) {
-        console.error("Audio chime error:", e);
-      }
-    }
-    window.playSuccessChime = playSuccessChime;
-
+    /* START NEW GAME */
     function startNewGame() {
+      playBubbleSound();
       renderSetupPairsList();
       showScreen('screen-setup');
     }
     window.startNewGame = startNewGame;
 
+    /* PAIR MANAGEMENT IN SETUP */
     function renderSetupPairsList() {
-      const list = document.getElementById('pairs-list');
-      const countLabel = document.getElementById('pair-count');
-      if (!list) return;
+      const container = document.getElementById('pairs-list');
+      const countEl = document.getElementById('pair-count');
+      if (!container) return;
 
-      list.innerHTML = '';
-      if (countLabel) countLabel.textContent = `${window.state.pairs.length} dupla(s)`;
+      container.innerHTML = '';
+      if (countEl) countEl.textContent = `${window.state.pairs.length} duplas`;
 
-      window.state.pairs.forEach((pair, index) => {
-        const item = document.createElement('div');
-        item.className = 'flex items-center justify-between bg-slate-800 p-3 rounded-xl border border-slate-700 text-sm';
-        item.innerHTML = `
+      window.state.pairs.forEach((p, index) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between bg-slate-800/80 border border-slate-700/80 px-3.5 py-2.5 rounded-xl';
+        div.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="font-bold text-amber-400">#${index+1}</span>
-            <span class="font-semibold text-white">${pair.name}</span>
+            <span class="text-amber-400 font-black text-xs">#${index + 1}</span>
+            <span class="text-sm font-bold text-white">${p.name}</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-400 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800 font-mono">${pair.score} pts</span>
-            <button onclick="removePair(${pair.id})" class="text-red-400 hover:text-red-300 p-1 font-bold">✕</button>
-          </div>
+          <button onclick="removePair(${p.id})" class="text-red-400 hover:text-red-300 font-bold text-sm px-2 py-1 transition">
+            ✕
+          </button>
         `;
-        list.appendChild(item);
+        container.appendChild(div);
       });
-
-      setStorage('impostor_pairs', JSON.stringify(window.state.pairs));
-      updateBottomBarInfo();
     }
     window.renderSetupPairsList = renderSetupPairsList;
 
     function addPair() {
+      playBubbleSound();
       const input = document.getElementById('new-pair-input');
-      let name = input ? input.value.trim() : '';
-
-      if (!name) {
-        name = `Dupla ${window.state.pairs.length + 1}`;
+      if (!input) return;
+      let val = input.value.trim();
+      if (!val) {
+        val = `Dupla ${window.state.pairs.length + 1}`;
       }
 
-      window.state.pairs.push({
-        id: Date.now(),
-        name: name,
-        score: 0,
-        active: true
-      });
-
-      if (input) input.value = '';
+      const newId = Date.now();
+      window.state.pairs.push({ id: newId, name: val, score: 0, active: true });
+      input.value = '';
+      setStorage('impostor_pairs', JSON.stringify(window.state.pairs));
       renderSetupPairsList();
     }
     window.addPair = addPair;
 
     function removePair(id) {
+      playBubbleSound();
       if (window.state.pairs.length <= 2) {
-        alert("O jogo precisa de pelo menos 3 duplas para funcionar!");
+        notify("Você precisa ter pelo menos 2 duplas cadastradas!", "Aviso", "⚠️");
         return;
       }
       window.state.pairs = window.state.pairs.filter(p => p.id !== id);
+      setStorage('impostor_pairs', JSON.stringify(window.state.pairs));
       renderSetupPairsList();
     }
     window.removePair = removePair;
 
-    function confirmSetupAndStartRound() {
-      if (window.state.pairs.length < 3) {
-        alert("Cadastre pelo menos 3 duplas para jogar com o impostor!");
-        return;
-      }
-
-      saveStateForUndo();
-
-      const catSelect = document.getElementById('category-select');
-      const selectedCat = catSelect ? catSelect.value : 'biblico';
-      window.state.currentCategory = selectedCat;
-
-      let dbPool = [];
-      if (selectedCat === 'aleatorio') {
-        const catKeys = Object.keys(WORD_DATABASE);
-        catKeys.forEach(key => {
-          dbPool = dbPool.concat(WORD_DATABASE[key]);
-        });
-      } else {
-        dbPool = WORD_DATABASE[selectedCat] || WORD_DATABASE.biblico;
-      }
-
-      const selectedPair = dbPool[Math.floor(Math.random() * dbPool.length)];
-
-      window.state.normalWord = selectedPair.normal;
-      window.state.impostorWord = selectedPair.impostor;
-
-      const impostorIndex = Math.floor(Math.random() * window.state.pairs.length);
-      window.state.impostorPairId = window.state.pairs[impostorIndex].id;
-
-      window.state.activePairs = window.state.pairs.map(p => ({
-        ...p,
-        active: true,
-        isImpostor: p.id === window.state.impostorPairId,
-        word: p.id === window.state.impostorPairId ? window.state.impostorWord : window.state.normalWord
-      }));
-
-      window.state.currentRevealIndex = 0;
-      window.state.isDuelMode = false;
-
-      runRaffleAnimation();
-    }
-    window.confirmSetupAndStartRound = confirmSetupAndStartRound;
-
-    function runRaffleAnimation() {
+    /* START ROUND & RAFFLE */
+    function startRaffleSequence(isDuelRaffle = false) {
       showScreen('screen-raffling');
-
-      const displayEl = document.getElementById('raffle-pair-display');
-      const actionBtnContainer = document.getElementById('raffle-action-container');
-
-      if (actionBtnContainer) actionBtnContainer.classList.add('hidden');
-      if (displayEl) {
-        displayEl.className = "text-3xl sm:text-4xl font-black text-[#c084fc] tracking-tight transition-transform scale-100";
-        displayEl.textContent = "Dupla 1";
+      const badge = document.getElementById('raffle-badge');
+      const display = document.getElementById('raffle-pair-display');
+      const actionContainer = document.getElementById('raffle-action-container');
+      const titleEl = document.getElementById('raffle-title');
+      const subtitleEl = document.getElementById('raffle-subtitle');
+      const subtextEl = document.getElementById('raffle-subtext');
+      
+      if (actionContainer) actionContainer.classList.add('hidden');
+      if (display) {
+        display.className = "text-3xl sm:text-4xl font-black text-[#c084fc] tracking-tight transition-all";
+      }
+      
+      // Estado Inicial (Durante o Sorteio)
+      if (badge) {
+        badge.textContent = "SORTEIO SECRETO";
+        badge.className = "inline-block bg-[#1a1233] border border-[#a855f7]/60 text-[#d8b4fe] font-black text-xs px-5 py-1.5 rounded-full uppercase tracking-widest shadow-md";
+      }
+      if (titleEl) {
+        titleEl.textContent = isDuelRaffle ? "SORTEANDO PALAVRAS DO DUELO..." : "SORTEANDO O IMPOSTOR...";
+      }
+      if (subtitleEl) {
+        subtitleEl.textContent = isDuelRaffle 
+          ? "O sistema está preparando as palavras para cada dupla."
+          : "O sistema está escolhendo quem receberá a palavra secreta.";
+      }
+      if (subtextEl) {
+        subtextEl.textContent = "SORTEANDO ENTRE DUPLAS ATIVAS";
       }
 
-      const pairs = window.state.pairs;
-      let tickCount = 0;
-      const maxTicks = 18;
-      let delay = 90;
+      const activePairs = window.state.activePairs.filter(p => p.active);
+      if (activePairs.length === 0) return;
 
-      function step() {
-        const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-        if (displayEl) {
-          displayEl.textContent = randomPair.name;
-          displayEl.style.transform = 'scale(1.08)';
-          setTimeout(() => { if (displayEl) displayEl.style.transform = 'scale(1)'; }, 50);
-        }
-
+      let counter = 0;
+      const interval = setInterval(() => {
+        const randomPair = activePairs[counter % activePairs.length];
+        if (display) display.textContent = randomPair.name;
+        counter++;
         playBubbleSound();
+      }, 120);
 
-        tickCount++;
-        if (tickCount < maxTicks) {
-          delay += 15;
-          setTimeout(step, delay);
-        } else {
-          setTimeout(() => {
-            if (displayEl) {
-              displayEl.className = "text-2xl sm:text-3xl font-black text-[#22c55e] tracking-tight transition-all animate-float drop-shadow-[0_0_12px_rgba(34,197,94,0.3)]";
-              displayEl.textContent = "Sorteio Concluído!";
-            }
-            if (actionBtnContainer) {
-              actionBtnContainer.classList.remove('hidden');
-            }
-            playSuccessChime();
-          }, 300);
+      setTimeout(() => {
+        clearInterval(interval);
+        playAttentionSound();
+        if (display) {
+          display.textContent = isDuelRaffle ? "PALAVRAS PRONTAS!" : "Sorteio Concluído!";
+          if (!isDuelRaffle) {
+            display.className = "raffle-complete-text font-black text-[#22c55e] tracking-tight transition-all animate-float drop-shadow-[0_0_12px_rgba(34,197,94,0.3)]";
+          }
         }
-      }
+        
+        // Transição de Estado: Sorteio Concluído
+        if (badge) {
+          badge.textContent = "SORTEIO CONCLUÍDO";
+          badge.className = "inline-block bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 font-black text-xs px-5 py-1.5 rounded-full uppercase tracking-widest shadow-md";
+        }
+        if (titleEl) {
+          titleEl.textContent = isDuelRaffle ? "DUELO PRONTO!" : "TUDO PRONTO!";
+        }
+        if (subtitleEl) {
+          subtitleEl.textContent = isDuelRaffle
+            ? "As palavras foram atribuídas em segredo. Cada dupla deve ver a sua palavra."
+            : "A dupla impostora foi escolhida em segredo. Passe o celular para as duplas verem suas palavras.";
+        }
+        if (subtextEl) {
+          subtextEl.textContent = isDuelRaffle ? "PALAVRAS DEFINIDAS EM SEGREDO" : "IMPOSTOR DEFINIDO EM SEGREDO";
+        }
 
-      step();
+        if (actionContainer) actionContainer.classList.remove('hidden');
+      }, 2200);
     }
-    window.runRaffleAnimation = runRaffleAnimation;
+    window.startRaffleSequence = startRaffleSequence;
 
     function proceedToDistribution() {
-      setupRevealForCurrentPair();
+      playBubbleSound();
+      window.state.currentRevealIndex = 0;
+      renderRevealStep();
       showScreen('screen-reveal');
     }
     window.proceedToDistribution = proceedToDistribution;
 
-    function setupRevealForCurrentPair() {
-      const totalPairs = window.state.activePairs.length;
-      const pair = window.state.activePairs[window.state.currentRevealIndex];
-      
-      if (!pair) {
-        renderActivePairsClues();
-        showScreen('screen-clues');
+    function confirmSetupAndStartRound() {
+      playBubbleSound();
+      if (window.state.pairs.length < 3) {
+        notify("São necessárias pelo menos 3 duplas para iniciar uma partida normal!", "Mínimo de Duplas", "⚠️");
         return;
       }
 
-      const readyStep = document.getElementById('reveal-step-ready');
-      const revealContent = document.getElementById('word-reveal-content');
+      saveStateForUndo();
+      window.state.isDuel = false;
 
-      if (readyStep) readyStep.classList.remove('hidden');
-      if (revealContent) revealContent.classList.add('hidden');
+      // Get chosen category
+      const select = document.getElementById('category-select');
+      const catKey = select ? select.value : "biblico";
+      window.state.currentCategory = catKey;
 
+      // Pick words
+      let pool = [];
+      if (catKey === 'aleatorio') {
+        Object.keys(WORD_DATABASE).forEach(k => {
+          pool = pool.concat(WORD_DATABASE[k]);
+        });
+      } else if (WORD_DATABASE[catKey]) {
+        pool = WORD_DATABASE[catKey];
+      } else {
+        pool = WORD_DATABASE.biblico;
+      }
+
+      const randomWordPair = pool[Math.floor(Math.random() * pool.length)];
+      window.state.normalWord = randomWordPair.normal;
+      window.state.impostorWord = randomWordPair.impostor;
+
+      // Prepare active pairs
+      window.state.activePairs = window.state.pairs.map(p => ({
+        ...p,
+        active: true,
+        isImpostor: false,
+        word: ""
+      }));
+
+      // Pick Impostor
+      const impostorIndex = Math.floor(Math.random() * window.state.activePairs.length);
+      window.state.activePairs[impostorIndex].isImpostor = true;
+      window.state.impostorPairId = window.state.activePairs[impostorIndex].id;
+
+      window.state.isImpostorRevealed = false;
+      window.state.currentRevealIndex = 0;
+
+      // Start raffle animation
+      startRaffleSequence(false);
+    }
+    window.confirmSetupAndStartRound = confirmSetupAndStartRound;
+
+    /* DUEL ROUND INITIALIZATION */
+    function startDuelRound() {
+      playBubbleSound();
+      saveStateForUndo();
+
+      window.state.isDuel = true;
+      const catKey = window.state.currentCategory || "biblico";
+      let pool = [];
+      if (catKey === 'aleatorio') {
+        Object.keys(WORD_DATABASE).forEach(k => {
+          pool = pool.concat(WORD_DATABASE[k]);
+        });
+      } else if (WORD_DATABASE[catKey]) {
+        pool = WORD_DATABASE[catKey];
+      } else {
+        pool = WORD_DATABASE.biblico;
+      }
+
+      const randomWordPair = pool[Math.floor(Math.random() * pool.length)];
+      window.state.normalWord = randomWordPair.normal;
+      window.state.impostorWord = randomWordPair.impostor;
+
+      // Filter active 2 duel pairs
+      const duelPairs = window.state.activePairs.filter(p => p.active);
+      if (duelPairs.length >= 2) {
+        duelPairs[0].word = window.state.normalWord;
+        duelPairs[0].isImpostor = false;
+        duelPairs[1].word = window.state.impostorWord;
+        duelPairs[1].isImpostor = false;
+      }
+
+      startRaffleSequence(true);
+    }
+    window.startDuelRound = startDuelRound;
+
+    /* REVEAL LOGIC */
+    function renderRevealStep() {
+      const activeForReveal = window.state.isDuel 
+        ? window.state.activePairs.filter(p => p.active)
+        : window.state.activePairs;
+
+      const pair = activeForReveal[window.state.currentRevealIndex];
+      const total = activeForReveal.length;
+      const idx = window.state.currentRevealIndex + 1;
+
+      // Update progress
+      const currentNum = document.getElementById('reveal-current-num');
+      const totalNum = document.getElementById('reveal-total-num');
+      const progressBar = document.getElementById('reveal-progress-bar');
+
+      if (currentNum) currentNum.textContent = idx;
+      if (totalNum) totalNum.textContent = total;
+      if (progressBar) progressBar.style.width = `${(idx / total) * 100}%`;
+
+      // Update Ready step
       const badgeName = document.getElementById('reveal-pair-badge-name');
       const textName = document.getElementById('reveal-pair-text-name');
       if (badgeName) badgeName.textContent = pair.name;
       if (textName) textName.textContent = pair.name;
 
-      const progressPercent = Math.round(((window.state.currentRevealIndex + 1) / totalPairs) * 100);
-      const progressBar = document.getElementById('reveal-progress-bar');
-      const currentNum = document.getElementById('reveal-current-num');
-      const totalNum = document.getElementById('reveal-total-num');
-
-      if (progressBar) progressBar.style.width = `${progressPercent}%`;
-      if (currentNum) currentNum.textContent = window.state.currentRevealIndex + 1;
-      if (totalNum) totalNum.textContent = totalPairs;
-
       const prevBtn = document.getElementById('reveal-prev-btn');
-      if (prevBtn) {
-        prevBtn.disabled = window.state.currentRevealIndex === 0;
-      }
-    }
-    window.setupRevealForCurrentPair = setupRevealForCurrentPair;
+      if (prevBtn) prevBtn.disabled = window.state.currentRevealIndex === 0;
 
-    function prevRevealPair() {
-      if (window.state.currentRevealIndex > 0) {
-        playBubbleSound();
-        window.state.currentRevealIndex--;
-        setupRevealForCurrentPair();
-      }
+      document.getElementById('reveal-step-ready').classList.remove('hidden');
+      document.getElementById('word-reveal-content').classList.add('hidden');
     }
-    window.prevRevealPair = prevRevealPair;
+    window.renderRevealStep = renderRevealStep;
 
     function revealWordForCurrentPair() {
       playBubbleSound();
+      const activeForReveal = window.state.isDuel 
+        ? window.state.activePairs.filter(p => p.active)
+        : window.state.activePairs;
 
-      const pair = window.state.activePairs[window.state.currentRevealIndex];
-      const readyBox = document.getElementById('reveal-step-ready');
-      const cardContainer = document.getElementById('word-reveal-content');
+      const pair = activeForReveal[window.state.currentRevealIndex];
+      const container = document.getElementById('word-reveal-content');
+      if (!container) return;
 
-      if (!pair || !cardContainer) return;
+      const isLast = window.state.currentRevealIndex === activeForReveal.length - 1;
 
-      if (readyBox) readyBox.classList.add('hidden');
-      cardContainer.classList.remove('hidden');
-
-      if (pair.isImpostor) {
-        cardContainer.innerHTML = `
-          <div class="bg-red-950/80 border-2 border-red-500 rounded-3xl p-5 sm:p-6 text-center shadow-2xl space-y-4 animate-fade-in">
-            <div class="inline-block bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase shadow">
-              ATENÇÃO ABSOLUTA
+      if (window.state.isDuel) {
+        // DUEL REVEAL CARD
+        const nextActionText = isLast ? "IR PARA O DUELO FINAL ⚔️" : "ENTENDI, PRÓXIMA DUPLA ➔";
+        container.innerHTML = `
+          <div class="bg-gradient-to-b from-purple-950/80 to-[#0f1123] border-2 border-purple-500/80 rounded-3xl p-6 text-center space-y-4 shadow-[0_0_30px_rgba(168,85,247,0.3)] animate-fade-in">
+            <div class="inline-flex items-center gap-2 bg-purple-900/60 border border-purple-500/50 px-4 py-1.5 rounded-full text-purple-300 font-black text-xs uppercase tracking-wider">
+              <span>⚔️</span> <span>DUELO FINAL • PALAVRA SECRETA</span>
             </div>
 
-            <h1 class="text-2xl sm:text-3xl font-black text-red-500 tracking-tight leading-tight">
-              🚨 VOCÊ É O IMPOSTOR!
-            </h1>
+            <div class="space-y-1 py-2">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">SUA PALAVRA É:</span>
+              <h2 class="text-3xl sm:text-4xl font-black text-amber-400 uppercase tracking-tight">${pair.word}</h2>
+            </div>
 
-            <h3 class="text-red-200 text-xs sm:text-sm font-bold bg-red-900/50 py-2 px-3 rounded-xl border border-red-700/60">
-              Sua palavra é diferente das outras duplas.
-            </h3>
+            <p class="text-slate-300 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
+              Guarde sua palavra em segredo! No Duelo Final, vocês deverão dar pistas e tentar adivinhar a palavra do adversário.
+            </p>
 
-            <div class="py-3 bg-slate-900/90 rounded-2xl border border-red-500/40 space-y-1">
-              <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SUA PALAVRA:</span>
-              <div class="text-2xl sm:text-3xl font-black text-amber-400 tracking-wide uppercase px-2">
-                ${pair.word}
+            <button onclick="nextRevealPair()" class="w-full py-4 bg-[#8b5cf6] hover:bg-[#7c3aed] active:scale-95 text-white font-black text-sm rounded-2xl shadow-lg transition uppercase tracking-wide">
+              ${nextActionText}
+            </button>
+          </div>
+        `;
+      } else if (pair.isImpostor) {
+        // IMPOSTOR CARD
+        const nextActionText = isLast ? "FINALIZAR DISTRIBUIÇÃO ➔" : "ENTENDI, PRÓXIMA DUPLA ➔";
+        container.innerHTML = `
+          <div class="bg-gradient-to-b from-red-950/80 to-[#0f1123] border-2 border-red-500 rounded-3xl p-6 text-center space-y-4 shadow-[0_0_30px_rgba(239,68,68,0.3)] animate-fade-in">
+            <div class="inline-flex items-center gap-2 bg-red-900/60 border border-red-500/50 px-4 py-1.5 rounded-full text-red-300 font-black text-xs uppercase tracking-wider">
+              <span>🚨</span> <span>VOCÊ É O IMPOSTOR!</span>
+            </div>
+
+            <div class="space-y-1 py-2">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">SUA PALAVRA É:</span>
+              <h2 class="text-3xl sm:text-4xl font-black text-red-400 uppercase tracking-tight">${window.state.impostorWord}</h2>
+            </div>
+
+            <div class="space-y-3 max-w-xs mx-auto text-xs sm:text-sm leading-relaxed text-slate-200 py-1">
+              <p class="text-slate-300">
+                Sua palavra é <strong class="text-red-500 font-black uppercase tracking-wide">DIFERENTE</strong> das outras duplas.
+              </p>
+              
+              <div class="space-y-2.5 text-left pt-1 font-medium">
+                <div class="flex items-start gap-2.5">
+                  <span class="text-amber-400 text-base leading-none pt-0.5">💡</span>
+                  <p class="text-slate-200">
+                    <strong class="text-amber-400 font-black">DESCOBRIR:</strong> Ouça as pistas para adivinhar a <strong class="text-amber-300 font-extrabold">palavra das outras duplas</strong>.
+                  </p>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                  <span class="text-red-500 text-base leading-none pt-0.5">🎭</span>
+                  <p class="text-slate-200">
+                    <strong class="text-red-500 font-black">DISFARÇAR:</strong> Dê uma pista estratégica e <strong class="text-red-400 font-black">finja ter recebido a mesma palavra!</strong>
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div class="text-left bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 text-slate-300 text-xs space-y-1.5 leading-relaxed">
-              <p>• <strong>As outras duplas receberam outra palavra.</strong></p>
-              <p>• Seu objetivo é descobrir, através das pistas, qual pode ser a palavra delas e tentar parecer que recebeu a mesma palavra.</p>
-              <p class="text-red-400 font-bold">• Não conte para ninguém que você é o impostor.</p>
-            </div>
-
-            <div class="pt-2">
-              <button onclick="confirmAndHideWord()" class="w-full py-3.5 bg-red-600 hover:bg-red-500 text-white font-black text-base rounded-2xl shadow-xl transition transform active:scale-95">
-                ENTENDI / ESCONDER PALAVRA
-              </button>
-            </div>
+            <button onclick="nextRevealPair()" class="w-full py-4 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-black text-sm rounded-2xl shadow-lg transition uppercase tracking-wide">
+              ${nextActionText}
+            </button>
           </div>
         `;
       } else {
-        cardContainer.innerHTML = `
-          <div class="bg-[#0f1123] border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 text-center shadow-2xl space-y-5 animate-fade-in">
-            <div class="inline-block bg-emerald-600/30 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase border border-emerald-500/30">
-              DUPLA INTEGRANTE
+        // NORMAL CARD
+        const nextActionText = isLast ? "FINALIZAR DISTRIBUIÇÃO ➔" : "ENTENDI, PRÓXIMA DUPLA ➔";
+        container.innerHTML = `
+          <div class="bg-[#0f1123] border-2 border-emerald-500/50 rounded-3xl p-6 text-center space-y-5 shadow-[0_0_25px_rgba(16,185,129,0.15)] animate-fade-in">
+            <div class="inline-flex items-center gap-1.5 bg-emerald-950 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-black tracking-wide border border-emerald-500/30">
+              <span>👥</span>
+              <span>${pair.name}</span>
             </div>
 
-            <h1 class="text-xl sm:text-2xl font-black text-slate-100 uppercase tracking-tight">
-              SUA PALAVRA É:
-            </h1>
-
-            <div class="py-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-1">
-              <div class="text-2xl sm:text-3xl font-black text-emerald-400 tracking-wider uppercase px-2">
-                ${pair.word}
-              </div>
+            <div class="space-y-1 py-2">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">SUA PALAVRA É:</span>
+              <h2 class="text-3xl sm:text-4xl font-black text-emerald-400 uppercase tracking-tight">${window.state.normalWord}</h2>
             </div>
 
-            <div class="bg-slate-900/60 py-2.5 px-3 rounded-xl border border-slate-700/80 text-slate-300 text-xs font-medium">
-              🔒 Memorize sua palavra. Não mostre para ninguém.
-            </div>
+            <p class="text-slate-400 text-xs">Guarde em segredo! Não deixe as outras duplas verem.</p>
 
-            <div class="pt-2">
-              <button onclick="confirmAndHideWord()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base rounded-2xl shadow-xl transition transform active:scale-95">
-                ESCONDER PALAVRA
-              </button>
-            </div>
+            <button onclick="nextRevealPair()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm rounded-2xl shadow-lg transition uppercase tracking-wide">
+              ${nextActionText}
+            </button>
           </div>
         `;
       }
+
+      document.getElementById('reveal-step-ready').classList.add('hidden');
+      container.classList.remove('hidden');
     }
     window.revealWordForCurrentPair = revealWordForCurrentPair;
 
-    function confirmAndHideWord() {
+    function nextRevealPair() {
       playBubbleSound();
-      window.state.currentRevealIndex++;
-      setupRevealForCurrentPair();
+      const activeForReveal = window.state.isDuel 
+        ? window.state.activePairs.filter(p => p.active)
+        : window.state.activePairs;
+
+      if (window.state.currentRevealIndex < activeForReveal.length - 1) {
+        window.state.currentRevealIndex++;
+        renderRevealStep();
+      } else {
+        if (window.state.isDuel) {
+          showDuelScreen();
+        } else {
+          renderActivePairsClues();
+          showScreen('screen-clues');
+        }
+      }
     }
-    window.confirmAndHideWord = confirmAndHideWord;
+    window.nextRevealPair = nextRevealPair;
 
+    /* CLUES & VOTING */
     function renderActivePairsClues() {
-      const list = document.getElementById('active-pairs-list');
-      if (!list) return;
+      const container = document.getElementById('active-pairs-list');
+      if (!container) return;
 
-      list.innerHTML = '';
-      const activeOnly = window.state.activePairs.filter(p => p.active);
-
-      activeOnly.forEach((pair, idx) => {
-        const item = document.createElement('div');
-        item.className = 'bg-slate-800 border border-slate-700 p-3 rounded-xl flex justify-between items-center text-xs';
-        item.innerHTML = `
+      container.innerHTML = '';
+      window.state.activePairs.forEach((p, idx) => {
+        if (!p.active) return;
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between bg-slate-800/80 border border-slate-700 p-3 rounded-xl text-xs';
+        div.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="bg-amber-500/20 text-amber-400 font-bold px-2 py-0.5 rounded-md">${idx+1}º</span>
-            <span class="font-bold text-white text-sm">${pair.name}</span>
+            <span class="bg-purple-900/60 text-purple-300 font-black px-2 py-0.5 rounded-lg">${idx + 1}º</span>
+            <span class="font-bold text-white text-sm">${p.name}</span>
           </div>
-          <span class="text-emerald-400 text-[11px] font-semibold">Pronta para dar pista</span>
+          <span class="text-slate-400 font-medium">Aguardando pista...</span>
         `;
-        list.appendChild(item);
+        container.appendChild(div);
       });
-
-      updateBottomBarInfo();
     }
     window.renderActivePairsClues = renderActivePairsClues;
 
     function goToVoting() {
+      playBubbleSound();
       const select = document.getElementById('vote-pair-select');
       if (!select) return;
 
       select.innerHTML = '';
       const activeOnly = window.state.activePairs.filter(p => p.active);
 
-      if (activeOnly.length <= 2) {
-        setupDuelMode();
-        return;
-      }
-
-      activeOnly.forEach(pair => {
+      activeOnly.forEach(p => {
         const opt = document.createElement('option');
-        opt.value = pair.id;
-        opt.textContent = pair.name;
+        opt.value = p.id;
+        opt.textContent = p.name;
+        opt.className = 'bg-slate-900 text-white';
         select.appendChild(opt);
       });
 
@@ -1165,90 +1363,235 @@
     window.goToVoting = goToVoting;
 
     function processVoteResult() {
+      playBubbleSound();
       saveStateForUndo();
 
       const select = document.getElementById('vote-pair-select');
-      if (!select) return;
+      if (!select || !select.value) return;
 
       const votedPairId = parseInt(select.value);
       const votedPair = window.state.activePairs.find(p => p.id === votedPairId);
 
       if (!votedPair) return;
 
-      if (votedPair.isImpostor) {
-        alert(`🎉 IMPOSTOR DESCOBERTO!\n\nA dupla "${votedPair.name}" ERA O IMPOSTOR!\nO grupo acertou em cheio!`);
-        
-        window.state.pairs.forEach(p => {
-          if (p.id !== votedPair.id) p.score += 2;
+      votedPair.active = false;
+      const wasImpostor = votedPair.isImpostor;
+      const activeRemaining = window.state.activePairs.filter(p => p.active);
+
+      if (wasImpostor) {
+        window.state.eliminationHistory.unshift({
+          round: window.state.currentRound,
+          text: `🎯 ${votedPair.name} foi descoberta como Impostor!`
         });
 
-        renderScoreboard();
-        showScreen('screen-scores');
+        // Award points to innocent pairs
+        window.state.pairs.forEach(p => {
+          if (p.id !== votedPair.id) {
+            p.score += 2;
+            window.state.scoreHistory.unshift({
+              round: window.state.currentRound,
+              text: `+2 pts para ${p.name} (Acerto de Impostor)`
+            });
+          }
+        });
       } else {
-        votedPair.active = false;
-        alert(`❌ A dupla "${votedPair.name}" NÃO era o impostor!\n\nEla foi eliminada da rodada. O impostor continua entre vocês!`);
+        window.state.eliminationHistory.unshift({
+          round: window.state.currentRound,
+          text: `❌ ${votedPair.name} foi eliminada (Não era o Impostor)`
+        });
+      }
 
-        const activeRemaining = window.state.activePairs.filter(p => p.active);
-        
-        if (activeRemaining.length <= 2) {
-          setupDuelMode();
+      // CHECK IF NOW WE HAVE EXACTLY 2 PAIRS (DUEL TIME)
+      if (activeRemaining.length === 2) {
+        window.state.eliminationHistory.unshift({
+          round: window.state.currentRound,
+          text: `⚔️ Duelo Final: ${activeRemaining[0].name} VS ${activeRemaining[1].name}`
+        });
+
+        const statusMsg = wasImpostor
+          ? `🚨 A dupla "${votedPair.name}" ERA O IMPOSTOR!\n\nEla foi eliminada com sucesso!`
+          : `❌ A dupla "${votedPair.name}" NÃO era o impostor!\n\nEla foi eliminada do jogo!`;
+
+        notify(
+          `${statusMsg}\n\nRestam apenas 2 duplas ativas no jogo. Toque no botão abaixo para sortear as palavras do Duelo Final!`,
+          "Resultado da Votação",
+          wasImpostor ? "🎯" : "🚨",
+          "⚔️ INICIAR DUELO FINAL",
+          function() {
+            startDuelRound();
+          }
+        );
+      } else {
+        // MORE THAN 2 PAIRS REMAINING
+        if (wasImpostor) {
+          renderScoreboard();
+          notify(
+            `🎉 IMPOSTOR DESCOBERTO!\n\nA dupla "${votedPair.name}" ERA O IMPOSTOR!\nO grupo acertou em cheio!`,
+            "Resultado do Voto",
+            "🏆",
+            "VER PLACAR DE PONTOS",
+            function() {
+              showScreen('screen-scores');
+            }
+          );
         } else {
-          renderActivePairsClues();
-          showScreen('screen-clues');
+          notify(
+            `❌ A dupla "${votedPair.name}" NÃO era o impostor!\n\nEla foi eliminada da rodada. O impostor continua entre vocês!`,
+            "Resultado do Voto",
+            "❌",
+            "CONTINUAR PISTAS",
+            function() {
+              renderActivePairsClues();
+              showScreen('screen-clues');
+            }
+          );
         }
       }
+
       updateBottomBarInfo();
     }
     window.processVoteResult = processVoteResult;
 
-    function setupDuelMode() {
-      window.state.isDuelMode = true;
+    function showDuelScreen() {
       showScreen('screen-duel');
     }
-    window.setupDuelMode = setupDuelMode;
+    window.showDuelScreen = showDuelScreen;
 
-    function openLeaderDuelPanel() {
-      toggleLeaderPanel();
-    }
-    window.openLeaderDuelPanel = openLeaderDuelPanel;
+    function openDuelResultModal() {
+      playBubbleSound();
+      const modal = document.getElementById('duel-modal');
+      const container = document.getElementById('duel-options-container');
+      if (!modal || !container) return;
 
-    function renderLeaderInfo() {
-      const secretBox = document.getElementById('leader-secret-info');
-      const pairsBox = document.getElementById('leader-pairs-management');
+      const activePairs = window.state.activePairs.filter(p => p.active);
+      container.innerHTML = '';
 
-      if (secretBox) {
-        const impostorPair = window.state.activePairs.find(p => p.isImpostor);
-        secretBox.innerHTML = `
-          <p>• <strong>Palavra Normal:</strong> <span class="text-emerald-400 font-bold">${window.state.normalWord || '—'}</span></p>
-          <p>• <strong>Palavra Impostor:</strong> <span class="text-amber-400 font-bold">${window.state.impostorWord || '—'}</span></p>
-          <p>• <strong>Impostor da Rodada:</strong> <span class="text-red-400 font-bold">${impostorPair ? impostorPair.name : '—'}</span></p>
-        `;
+      if (activePairs.length >= 2) {
+        // Winner Option 1
+        const btn1 = document.createElement('button');
+        btn1.className = 'w-full py-3 bg-[#1e293b] hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-between px-4';
+        btn1.innerHTML = `<span>🏆 Vitória de ${activePairs[0].name}</span><span class="text-xs bg-emerald-500/20 px-2 py-0.5 rounded-md text-emerald-400">+3 pts</span>`;
+        btn1.onclick = () => recordDuelWinner(activePairs[0].id, activePairs[1].id);
+
+        // Winner Option 2
+        const btn2 = document.createElement('button');
+        btn2.className = 'w-full py-3 bg-[#1e293b] hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-between px-4';
+        btn2.innerHTML = `<span>🏆 Vitória de ${activePairs[1].name}</span><span class="text-xs bg-emerald-500/20 px-2 py-0.5 rounded-md text-emerald-400">+3 pts</span>`;
+        btn2.onclick = () => recordDuelWinner(activePairs[1].id, activePairs[0].id);
+
+        // Tie Option
+        const btnTie = document.createElement('button');
+        btnTie.className = 'w-full py-3 bg-[#1e293b] hover:bg-amber-600/30 border border-amber-500/40 text-amber-300 font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-between px-4';
+        btnTie.innerHTML = `<span>🤝 Empate (Ambas pontuam)</span><span class="text-xs bg-amber-500/20 px-2 py-0.5 rounded-md text-amber-400">+1 pt cada</span>`;
+        btnTie.onclick = () => recordDuelWinner(null, null, true);
+
+        container.appendChild(btn1);
+        container.appendChild(btn2);
+        container.appendChild(btnTie);
       }
 
-      if (pairsBox) {
-        pairsBox.innerHTML = '';
-        window.state.pairs.forEach(p => {
-          const div = document.createElement('div');
-          div.className = 'flex items-center justify-between bg-slate-800 p-2.5 rounded-xl text-xs border border-slate-700';
-          div.innerHTML = `
-            <span class="font-bold text-white">${p.name} (${p.score} pts)</span>
-            <div class="flex items-center gap-1">
-              <button onclick="adjustScore(${p.id}, 1)" class="bg-emerald-600 text-white font-black px-2 py-1 rounded-lg">+1</button>
-              <button onclick="adjustScore(${p.id}, 2)" class="bg-emerald-600 text-white font-black px-2 py-1 rounded-lg">+2</button>
-              <button onclick="adjustScore(${p.id}, -1)" class="bg-red-600 text-white font-black px-2 py-1 rounded-lg">-1</button>
-            </div>
-          `;
-          pairsBox.appendChild(div);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+    window.openDuelResultModal = openDuelResultModal;
+
+    function closeDuelModal() {
+      const modal = document.getElementById('duel-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+    window.closeDuelModal = closeDuelModal;
+
+    function recordDuelWinner(winnerId, loserId, isTie = false) {
+      playBubbleSound();
+      closeDuelModal();
+
+      if (isTie) {
+        const activePairs = window.state.activePairs.filter(p => p.active);
+        activePairs.forEach(ap => {
+          const mainP = window.state.pairs.find(p => p.id === ap.id);
+          if (mainP) {
+            mainP.score += 1;
+            window.state.scoreHistory.unshift({
+              round: window.state.currentRound,
+              text: `+1 pt para ${mainP.name} (Empate no Duelo Final)`
+            });
+          }
         });
+        notify("🤝 Empate no Duelo Final!\n\nAmbas as duplas somaram +1 ponto. Iniciando nova rodada!", "Duelo Concluído", "🤝");
+      } else {
+        const winnerP = window.state.pairs.find(p => p.id === winnerId);
+        if (winnerP) {
+          winnerP.score += 3;
+          window.state.scoreHistory.unshift({
+            round: window.state.currentRound,
+            text: `+3 pts para ${winnerP.name} (Vitória no Duelo Final)`
+          });
+          notify(`🏆 Vitória de "${winnerP.name}"!\n\nA dupla venceu o Duelo Final e somou +3 pontos! Preparando nova rodada...`, "Duelo Concluído", "⚔️");
+        }
       }
+
+      renderScoreboard();
+      
+      // Advance round counter and automatically launch next round after duel
+      setTimeout(() => {
+        startNewRound();
+      }, 1500);
     }
-    window.renderLeaderInfo = renderLeaderInfo;
+    window.recordDuelWinner = recordDuelWinner;
+
+    /* LEADER QUICK ACTIONS & MANAGEMENT */
+    function toggleImpostorReveal() {
+      playBubbleSound();
+      window.state.isImpostorRevealed = !window.state.isImpostorRevealed;
+      renderLeaderInfo();
+    }
+    window.toggleImpostorReveal = toggleImpostorReveal;
+
+    function leaderQuickVote() {
+      toggleLeaderPanel();
+      goToVoting();
+    }
+    window.leaderQuickVote = leaderQuickVote;
+
+    function restartCurrentRoundPrompt() {
+      toggleLeaderPanel();
+      confirmSetupAndStartRound();
+    }
+    window.restartCurrentRoundPrompt = restartCurrentRoundPrompt;
+
+    function startNextRoundPrompt() {
+      toggleLeaderPanel();
+      startNewRound();
+    }
+    window.startNextRoundPrompt = startNextRoundPrompt;
+
+    function confirmEndGameAndReset() {
+      playBubbleSound();
+      toggleLeaderPanel();
+      window.state.pairs.forEach(p => p.score = 0);
+      window.state.currentRound = 1;
+      window.state.eliminationHistory = [];
+      window.state.scoreHistory = [];
+      setStorage('impostor_pairs', JSON.stringify(window.state.pairs));
+      renderSetupPairsList();
+      showScreen('screen-home');
+      notify("🚨 A partida foi encerrada e todos os pontos foram zerados!", "Partida Encerrada", "🚨");
+    }
+    window.confirmEndGameAndReset = confirmEndGameAndReset;
 
     function adjustScore(pairId, delta) {
+      playBubbleSound();
       saveStateForUndo();
       const p = window.state.pairs.find(x => x.id === pairId);
       if (p) {
         p.score = Math.max(0, p.score + delta);
+        window.state.scoreHistory.unshift({
+          round: window.state.currentRound,
+          text: `${delta > 0 ? '+' + delta : delta} pt(s) para ${p.name}`
+        });
         renderLeaderInfo();
         renderScoreboard();
         setStorage('impostor_pairs', JSON.stringify(window.state.pairs));
@@ -1256,12 +1599,140 @@
     }
     window.adjustScore = adjustScore;
 
-    function cancelRoundAndRestart() {
-      toggleLeaderPanel();
-      confirmSetupAndStartRound();
-    }
-    window.cancelRoundAndRestart = cancelRoundAndRestart;
+    function renderLeaderInfo() {
+      // Round badge
+      const badge = document.getElementById('leader-round-badge');
+      if (badge) badge.textContent = `Rodada ${window.state.currentRound || 1}`;
 
+      // Words
+      const normalEl = document.getElementById('leader-normal-word');
+      const impostorEl = document.getElementById('leader-impostor-word');
+      if (normalEl) normalEl.textContent = window.state.normalWord || '---';
+      if (impostorEl) impostorEl.textContent = window.state.impostorWord || '---';
+
+      // Impostor Name
+      const impostorNameEl = document.getElementById('leader-impostor-name');
+      const toggleBtn = document.getElementById('toggle-reveal-impostor-btn');
+      const impostorPair = window.state.activePairs.find(p => p.isImpostor);
+
+      if (impostorNameEl) {
+        if (window.state.isImpostorRevealed && impostorPair) {
+          impostorNameEl.textContent = impostorPair.name;
+          impostorNameEl.className = "text-sm font-black text-amber-400 truncate";
+        } else {
+          impostorNameEl.textContent = '••••••••';
+          impostorNameEl.className = "text-sm font-black text-[#c084fc] truncate";
+        }
+      }
+
+      if (toggleBtn) {
+        toggleBtn.innerHTML = window.state.isImpostorRevealed
+          ? `<span>🙈</span><span>Esconder</span>`
+          : `<span>👁</span><span>Revelar</span>`;
+      }
+
+      // Adjust pairs list
+      const pairsBox = document.getElementById('leader-pairs-management');
+      if (pairsBox) {
+        pairsBox.innerHTML = '';
+        window.state.pairs.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'flex items-center justify-between bg-[#090d18] p-2.5 rounded-xl text-xs border border-[#1a233a]';
+          div.innerHTML = `
+            <span class="font-bold text-white">${p.name} <span class="text-amber-400 font-mono">(${p.score} pts)</span></span>
+            <div class="flex items-center gap-1">
+              <button onclick="adjustScore(${p.id}, 1)" class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-black px-2.5 py-1 rounded-lg text-xs">+1</button>
+              <button onclick="adjustScore(${p.id}, 2)" class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-black px-2.5 py-1 rounded-lg text-xs">+2</button>
+              <button onclick="adjustScore(${p.id}, -1)" class="bg-red-600/90 hover:bg-red-500 text-white font-black px-2.5 py-1 rounded-lg text-xs">-1</button>
+            </div>
+          `;
+          pairsBox.appendChild(div);
+        });
+      }
+
+      // Eliminations history
+      const elimBox = document.getElementById('leader-elimination-history');
+      if (elimBox) {
+        if (window.state.eliminationHistory && window.state.eliminationHistory.length > 0) {
+          elimBox.innerHTML = window.state.eliminationHistory.map(item => `
+            <div class="py-1 border-b border-[#1a233a] last:border-0 font-medium text-slate-300">
+              <span class="text-purple-400 font-bold">[Rodada ${item.round}]</span> ${item.text}
+            </div>
+          `).join('');
+          elimBox.className = "bg-[#090d18] border border-[#1a233a] rounded-2xl p-3 text-xs max-h-28 overflow-y-auto space-y-1";
+        } else {
+          elimBox.innerHTML = 'Nenhuma eliminação registrada nesta partida.';
+          elimBox.className = "bg-[#090d18] border border-[#1a233a] rounded-2xl p-3.5 text-xs text-slate-400 italic";
+        }
+      }
+
+      // Score movements history
+      const scoreBox = document.getElementById('leader-score-history');
+      if (scoreBox) {
+        if (window.state.scoreHistory && window.state.scoreHistory.length > 0) {
+          scoreBox.innerHTML = window.state.scoreHistory.map(item => `
+            <div class="py-1 border-b border-[#1a233a] last:border-0 font-medium text-slate-300">
+              <span class="text-amber-400 font-bold">[Rodada ${item.round}]</span> ${item.text}
+            </div>
+          `).join('');
+          scoreBox.className = "bg-[#090d18] border border-[#1a233a] rounded-2xl p-3 text-xs max-h-28 overflow-y-auto space-y-1";
+        } else {
+          scoreBox.innerHTML = 'Nenhuma alteração de pontos registrada.';
+          scoreBox.className = "bg-[#090d18] border border-[#1a233a] rounded-2xl p-3.5 text-xs text-slate-400 italic";
+        }
+      }
+    }
+    window.renderLeaderInfo = renderLeaderInfo;
+
+    /* UNDO SYSTEM */
+    function saveStateForUndo() {
+      const snapshot = JSON.parse(JSON.stringify({
+        pairs: window.state.pairs,
+        activePairs: window.state.activePairs,
+        currentRound: window.state.currentRound,
+        eliminationHistory: window.state.eliminationHistory,
+        scoreHistory: window.state.scoreHistory
+      }));
+      window.state.historyStack.push(snapshot);
+      if (window.state.historyStack.length > 10) window.state.historyStack.shift();
+    }
+
+    function undoLastAction() {
+      playBubbleSound();
+      if (!window.state.historyStack || window.state.historyStack.length === 0) {
+        notify("Nenhuma ação recente para desfazer!", "Aviso", "ℹ️");
+        return;
+      }
+      const prev = window.state.historyStack.pop();
+      window.state.pairs = prev.pairs;
+      window.state.activePairs = prev.activePairs;
+      window.state.currentRound = prev.currentRound;
+      window.state.eliminationHistory = prev.eliminationHistory;
+      window.state.scoreHistory = prev.scoreHistory;
+
+      updateBottomBarInfo();
+      renderLeaderInfo();
+      renderScoreboard();
+      notify("↩️ Última ação desfeita com sucesso!", "Desfazer", "↩️");
+    }
+    window.undoLastAction = undoLastAction;
+
+    /* BOTTOM BAR UPDATE */
+    function updateBottomBarInfo() {
+      const roundLabel = document.getElementById('bottom-round-label');
+      const pairsLabel = document.getElementById('bottom-active-pairs-label');
+
+      if (roundLabel) roundLabel.textContent = `Rodada ${window.state.currentRound || 1}`;
+      
+      const count = window.state.activePairs && window.state.activePairs.length > 0
+        ? window.state.activePairs.filter(p => p.active).length
+        : window.state.pairs.length;
+
+      if (pairsLabel) pairsLabel.textContent = `${count} Dupla${count !== 1 ? 's' : ''} Ativa${count !== 1 ? 's' : ''}`;
+    }
+    window.updateBottomBarInfo = updateBottomBarInfo;
+
+    /* SCORES & ROUND NAVIGATION */
     function renderScoreboard() {
       const list = document.getElementById('scoreboard-list');
       if (!list) return;
@@ -1285,16 +1756,17 @@
     window.renderScoreboard = renderScoreboard;
 
     function startNewRound() {
+      playBubbleSound();
       window.state.currentRound++;
       confirmSetupAndStartRound();
     }
     window.startNewRound = startNewRound;
 
-    /* Initial setup on page load */
-    window.addEventListener('load', function() {
+    /* WINDOW ONLOAD INITIALIZATION */
+    window.onload = function() {
       showScreen('screen-home');
       updateBottomBarInfo();
-    });
+    };
   </script>
 </body>
 </html>
